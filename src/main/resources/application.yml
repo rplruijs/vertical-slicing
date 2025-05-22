@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: vertical-slicing
+  datasource:
+    url: jdbc:postgresql://localhost:5432/your_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+    create-schemas: true
+    locations: classpath:db/migration
+axon:
+  serializer:
+    ## xstream is not compatible anymore with jdk17+
+    general: jackson
+  axonserver:
+    enabled: false
