@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dinner Invitations - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-utensils text-primary text-2xl mr-3"></i>
+                    <h1 class="text-xl font-bold text-gray-900">Dinner Invitations</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200">
+                        <i class="fas fa-plus mr-2"></i>New Dinner
+                    </button>
+                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-gray-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100 mr-4">
+                        <i class="fas fa-users text-blue-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Friends</p>
+                        <p class="text-2xl font-bold text-gray-900">24</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100 mr-4">
+                        <i class="fas fa-calendar-check text-green-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Upcoming Dinners</p>
+                        <p class="text-2xl font-bold text-gray-900">3</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100 mr-4">
+                        <i class="fas fa-clock text-yellow-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Pending RSVPs</p>
+                        <p class="text-2xl font-bold text-gray-900">7</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100 mr-4">
+                        <i class="fas fa-star text-purple-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Events</p>
+                        <p class="text-2xl font-bold text-gray-900">18</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Upcoming Dinners -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900">
+                                <i class="fas fa-calendar-alt mr-2 text-primary"></i>
+                                Upcoming Dinners
+                            </h2>
+                            <button class="text-primary hover:text-indigo-700 text-sm font-medium">
+                                View All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <!-- Dinner Event 1 -->
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-4 hover:bg-gray-100 transition duration-200">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-primary text-white rounded-lg mr-4">
+                                    <i class="fas fa-pizza-slice"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900">Italian Night</h3>
+                                    <p class="text-gray-500 text-sm">Friday, June 2, 2025 at 7:00 PM</p>
+                                    <p class="text-gray-600 text-sm">8 guests invited • 6 confirmed</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                                    Confirmed
+                                </span>
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Dinner Event 2 -->
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-4 hover:bg-gray-100 transition duration-200">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-secondary text-white rounded-lg mr-4">
+                                    <i class="fas fa-fish"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900">Sushi Making Workshop</h3>
+                                    <p class="text-gray-500 text-sm">Saturday, June 10, 2025 at 6:30 PM</p>
+                                    <p class="text-gray-600 text-sm">6 guests invited • 3 confirmed</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
+                                    Pending
+                                </span>
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Dinner Event 3 -->
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-200">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-red-500 text-white rounded-lg mr-4">
+                                    <i class="fas fa-birthday-cake"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900">Birthday Celebration</h3>
+                                    <p class="text-gray-500 text-sm">Sunday, June 18, 2025 at 5:00 PM</p>
+                                    <p class="text-gray-600 text-sm">12 guests invited • 8 confirmed</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                                    Confirmed
+                                </span>
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friends List -->
+            <div id="friends-list" th:replace="~{fragments/friends :: friends-list}"></div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="mt-8">
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">
+                        <i class="fas fa-history mr-2 text-primary"></i>
+                        Recent Activity
+                    </h2>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="p-2 bg-green-100 rounded-full mr-4">
+                                <i class="fas fa-check text-green-600 text-sm"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-gray-900">Sarah Wilson confirmed attendance for <strong>Italian Night</strong></p>
+                                <p class="text-gray-500 text-sm">2 hours ago</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="p-2 bg-blue-100 rounded-full mr-4">
+                                <i class="fas fa-plus text-blue-600 text-sm"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-gray-900">You invited 6 friends to <strong>Sushi Making Workshop</strong></p>
+                                <p class="text-gray-500 text-sm">1 day ago</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="p-2 bg-yellow-100 rounded-full mr-4">
+                                <i class="fas fa-clock text-yellow-600 text-sm"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-gray-900">Anna Miller requested to reschedule <strong>Movie Night</strong></p>
+                                <p class="text-gray-500 text-sm">3 days ago</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="p-2 bg-purple-100 rounded-full mr-4">
+                                <i class="fas fa-users text-purple-600 text-sm"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-gray-900">You added <strong>Emma Brown</strong> to your friends list</p>
+                                <p class="text-gray-500 text-sm">1 week ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Action Floating Button -->
+    <div class="fixed bottom-6 right-6">
+        <button class="bg-primary text-white w-14 h-14 rounded-full shadow-lg hover:bg-indigo-700 transition duration-200 flex items-center justify-center">
+            <i class="fas fa-plus text-xl"></i>
+        </button>
+    </div>
+
+    <script>
+        // Simple interactivity for demo purposes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers for demonstration
+            const dinnerCards = document.querySelectorAll('.bg-gray-50');
+            dinnerCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.classList.toggle('ring-2');
+                    this.classList.toggle('ring-primary');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
