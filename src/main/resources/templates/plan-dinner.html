@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Dinner - Dinner Invitations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-utensils text-primary text-2xl mr-3"></i>
+                    <h1 class="text-xl font-bold text-gray-900">Dinner Invitations</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-gray-900 transition duration-200">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-gray-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Plan a New Dinner</h2>
+            <p class="text-gray-600">Select friends and set a date for your next dinner invitation</p>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Dinner Details -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900">
+                                <i class="fas fa-utensils mr-2 text-primary"></i>
+                                Dinner Details
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <form id="dinnerForm">
+                            <div class="space-y-6">
+                                <!-- Dinner Name -->
+                                <div>
+                                    <label for="dinnerName" class="block text-sm font-medium text-gray-700 mb-1">Dinner Name</label>
+                                    <input type="text" id="dinnerName" name="dinnerName" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                                </div>
+
+                                <!-- Date and Time -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="dinnerDate" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                                        <div class="relative">
+                                            <input type="text" id="dinnerDate" name="dinnerDate" required
+                                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                                                placeholder="Select date">
+                                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                <i class="fas fa-calendar text-gray-400"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="dinnerTime" class="block text-sm font-medium text-gray-700 mb-1">Time</label>
+                                        <div class="relative">
+                                            <input type="text" id="dinnerTime" name="dinnerTime" required
+                                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                                                placeholder="Select time">
+                                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                <i class="fas fa-clock text-gray-400"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Location -->
+                                <div>
+                                    <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                                    <input type="text" id="location" name="location"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                                </div>
+
+                                <!-- Notes -->
+                                <div>
+                                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                                    <textarea id="notes" name="notes" rows="3"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Selected Friends -->
+                <div class="bg-white rounded-lg shadow mt-6">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900">
+                                <i class="fas fa-user-check mr-2 text-primary"></i>
+                                Selected Friends <span id="selectedCount" class="text-sm font-normal text-gray-500">(0 selected)</span>
+                            </h2>
+                            <div>
+                                <button id="clearAll" class="text-red-600 hover:text-red-800 text-sm font-medium mr-4">
+                                    <i class="fas fa-trash mr-1"></i>Clear All
+                                </button>
+                                <button id="inviteBtn" disabled
+                                    class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <i class="fas fa-paper-plane mr-2"></i>Send Invitations
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div id="selectedFriends" class="space-y-4">
+                            <p id="noFriendsSelected" class="text-gray-500 text-center py-4">No friends selected yet. Please select at least 2 friends.</p>
+                            <!-- Selected friends will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Friends -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900">
+                                <i class="fas fa-users mr-2 text-primary"></i>
+                                Available Friends
+                            </h2>
+                            <div class="relative">
+                                <input type="text" id="searchFriends" placeholder="Search friends..."
+                                    class="px-3 py-1 pr-8 text-sm border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                    <i class="fas fa-search text-gray-400 text-sm"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div id="availableFriends" class="space-y-4">
+
+                            <th:block th:each="friend : ${friendsReadModel.data}">
+                            <!-- Friends -->
+                                <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition cursor-pointer" data-friend-id="1" onclick="selectFriend(this)">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
+                                            AM
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="font-medium text-gray-900" th:text="|${friend.firstName} ${friend.lastName}|">/p>
+                                            <p class="text-gray-500 text-sm">Last dinner: 2 weeks ago</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="w-3 h-3 bg-green-400 rounded-full"></span>
+                                    </div>
+                                </div>
+                            </th:block>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize date picker
+            flatpickr("#dinnerDate", {
+                minDate: "today",
+                dateFormat: "Y-m-d"
+            });
+
+            // Initialize time picker
+            flatpickr("#dinnerTime", {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: false
+            });
+
+            // Search functionality
+            const searchField = document.getElementById('searchFriends');
+            searchField.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const friends = document.querySelectorAll('#availableFriends > div');
+                
+                friends.forEach(friend => {
+                    const name = friend.querySelector('.font-medium').textContent.toLowerCase();
+                    if (name.includes(searchTerm)) {
+                        friend.style.display = '';
+                    } else {
+                        friend.style.display = 'none';
+                    }
+                });
+            });
+
+            // Clear all selected friends
+            document.getElementById('clearAll').addEventListener('click', function() {
+                const selectedFriends = document.getElementById('selectedFriends');
+                selectedFriends.innerHTML = '<p id="noFriendsSelected" class="text-gray-500 text-center py-4">No friends selected yet. Please select at least 2 friends.</p>';
+                
+                // Make all friends in available list visible again
+                document.querySelectorAll('#availableFriends > div').forEach(friend => {
+                    friend.classList.remove('bg-gray-100', 'opacity-50');
+                    friend.classList.add('hover:bg-gray-50');
+                    friend.style.pointerEvents = '';
+                });
+
+                updateSelectedCount(0);
+            });
+
+            // Submit form handler
+            document.getElementById('inviteBtn').addEventListener('click', function() {
+                // Get all the form data
+                const dinnerName = document.getElementById('dinnerName').value;
+                const dinnerDate = document.getElementById('dinnerDate').value;
+                const dinnerTime = document.getElementById('dinnerTime').value;
+                const location = document.getElementById('location').value;
+                const notes = document.getElementById('notes').value;
+                
+                // Get all selected friends' IDs
+                const selectedFriendElements = document.querySelectorAll('#selectedFriends > div');
+                const selectedFriendIds = Array.from(selectedFriendElements).map(el => el.dataset.friendId);
+                
+                // Here you would send this data to your backend
+                console.log('Submitting dinner plan:', {
+                    name: dinnerName,
+                    date: dinnerDate,
+                    time: dinnerTime,
+                    location: location,
+                    notes: notes,
+                    friendIds: selectedFriendIds
+                });
+
+                // For demonstration purposes, show an alert
+                alert('Dinner invitation sent successfully!');
+                
+                // In a real application, you would redirect to a confirmation page or the dashboard
+                // window.location.href = '/';
+            });
+        });
+
+        // Select a friend
+        function selectFriend(element) {
+            const friendId = element.dataset.friendId;
+            const friendName = element.querySelector('.font-medium').textContent;
+            const friendInitials = element.querySelector('.rounded-full').textContent.trim();
+            const friendColor = element.querySelector('.rounded-full').classList[1]; // Get bg color class
+            
+            // Check if already selected
+            const existingSelection = document.querySelector(`#selectedFriends div[data-friend-id="${friendId}"]`);
+            if (existingSelection) return;
+
+            // Create selected friend element
+            const selected = document.createElement('div');
+            selected.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+            selected.dataset.friendId = friendId;
+            selected.innerHTML = `
+                <div class="flex items-center">
+                    <div class="w-10 h-10 ${friendColor} rounded-full flex items-center justify-center text-white font-semibold">
+                        ${friendInitials}
+                    </div>
+                    <div class="ml-3">
+                        <p class="font-medium text-gray-900">${friendName}</p>
+                    </div>
+                </div>
+                <button onclick="removeSelectedFriend(this.parentNode)" class="text-gray-400 hover:text-red-600 transition">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            // Remove "no friends selected" message if it exists
+            const noFriendsMessage = document.getElementById('noFriendsSelected');
+            if (noFriendsMessage) {
+                noFriendsMessage.remove();
+            }
+
+            // Add to selected friends
+            document.getElementById('selectedFriends').appendChild(selected);
+            
+            // Disable the friend in the available list
+            element.classList.remove('hover:bg-gray-50');
+            element.classList.add('bg-gray-100', 'opacity-50');
+            element.style.pointerEvents = 'none';
+
+            // Update count and check if we can enable the invite button
+            updateSelectedCount();
+        }
+
+        // Remove a selected friend
+        function removeSelectedFriend(element) {
+            const friendId = element.dataset.friendId;
+            
+            // Re-enable in available list
+            const availableFriend = document.querySelector(`#availableFriends div[data-friend-id="${friendId}"]`);
+            if (availableFriend) {
+                availableFriend.classList.remove('bg-gray-100', 'opacity-50');
+                availableFriend.classList.add('hover:bg-gray-50');
+                availableFriend.style.pointerEvents = '';
+            }
+            
+            // Remove from selected
+            element.remove();
+            
+            // Check if we need to show "no friends" message
+            const selectedFriends = document.querySelectorAll('#selectedFriends > div');
+            if (selectedFriends.length === 0) {
+                document.getElementById('selectedFriends').innerHTML = '<p id="noFriendsSelected" class="text-gray-500 text-center py-4">No friends selected yet. Please select at least 2 friends.</p>';
+            }
+            
+            // Update count
+            updateSelectedCount();
+        }
+
+        // Update selected count and button state
+        function updateSelectedCount() {
+            const count = document.querySelectorAll('#selectedFriends > div').length;
+            document.getElementById('selectedCount').textContent = `(${count} selected)`;
+            
+            // Enable/disable invite button based on count
+            const inviteBtn = document.getElementById('inviteBtn');
+            inviteBtn.disabled = count < 2;
+        }
+    </script>
+</body>
+</html>
