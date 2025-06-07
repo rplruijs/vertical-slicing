@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering HTMX - playground</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <button hx-get="/lorem">
+        Get lorem
+    </button>
+
+
+    <div hx-post="/mouse_entered"
+         hx-trigger="mouseenter once"
+         hx-target="#mouse-mover-detector"
+        hx>
+        [Here Mouse, Mouse!]
+    </div>
+
+
+    <div id="mouse-mover-detector">
+
+    </div>
+
+    <div id="spinner" style="display:none;">Loading...</div>
+
+    <script>
+        document.body.addEventListener('htmx:beforeRequest', function(evt) {
+            document.querySelector('#spinner').style.display = 'block';
+        });
+        document.body.addEventListener('htmx:afterRequest', function(evt) {
+            document.querySelector('#spinner').style.display = 'none';
+        });
+    </script>
+
+    <div hx-get="/data" hx-trigger="click">Fetch Data</div>
+
+
+    <input type="text" name="q"
+           hx-get="/trigger_delay"
+           hx-trigger="keyup changed delay:500ms"
+           hx-target="#search-results"
+           placeholder="Search...">
+    </input>
+    <div id="search-results"></div>
+
+
+    <div hx-get="/data" hx-trigger="click[ctrlKey]">
+        Control Click Me
+    </div>
+
+    <div hx-ext="sse" sse-connect="/chatroom" sse-swap="message">
+        Contents of this box will be updated in real time
+        with every SSE message received from the chatroom.
+    </div>
+
+    <br>
+
+    <h1>FORM</h1>
+
+    <form hx-post="/validate"
+          hx-target="#form-container"
+          hx-swap="outerHTML">
+        <span>email</span>
+        <label>
+            <input name="email"
+                   hx-post="/validate-email"
+                   hx-trigger="keyup delay:2s,blur"
+                   hx-target="#email-error"
+                   hx-swap="outerHTML"/>
+        </label>
+        <div id="email-error"></div>
+
+        <span>phone number</span>
+        <label>
+            <input name="phoneNumber"
+                   hx-post="/validate-phone-number"
+                   hx-trigger="blur"
+                   hx-target="#phone-number-error"
+                   hx-swap="outerHTML"/>
+        </label>
+        <div id="phone-number-error"></div>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="form-container"></div>
+</body>
+</html>

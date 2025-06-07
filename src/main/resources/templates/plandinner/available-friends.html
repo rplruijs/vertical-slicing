@@ -1,0 +1,27 @@
+<!-- Available Friends Fragment -->
+<div th:fragment="available-friends" id="availableFriends" class="space-y-4">
+    <th:block th:each="friend : ${friendsReadModel.data}">
+        <!-- Friends -->
+        <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition cursor-pointer"
+             th:data-friend-id="${friend.friendId}"
+             th:hx-post="'/plan-dinner/select-friend/' + ${friend.friendId}"
+             hx-target="#selectedFriends"
+             hx-swap="beforeend"
+             hx-trigger="click" q
+             hx-on::after-request="this.classList.add('bg-gray-100', 'opacity-50'); this.classList.remove('hover:bg-gray-50'); this.style.pointerEvents = 'none'; updateCountRelatedElements();">
+            <div class="flex items-center">
+                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold"
+                     th:text="${!#strings.isEmpty(friend.firstName) ? #strings.substring(friend.firstName, 0, 1) : ''} + ${!#strings.isEmpty(friend.lastName) ? #strings.substring(friend.lastName, 0, 1) : ''}">
+                    AM
+                </div>
+                <div class="ml-3">
+                    <p class="font-medium text-gray-900" th:text="|${friend.firstName} ${friend.lastName}|"></p>
+                    <p class="text-gray-500 text-sm">Last dinner: 2 weeks ago</p>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <span class="w-3 h-3 bg-green-400 rounded-full"></span>
+            </div>
+        </div>
+    </th:block>
+</div>

@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 
 interface FriendReadModelRepository: JpaRepository<FriendReadModelEntity, String> {
-    fun findByFriendId(friendId: String): List<FriendReadModelEntity>
+    fun findByFriendId(friendId: String): FriendReadModelEntity
 }
 
 @Component
-class FriendReadModelProjector(var repository: FriendReadModelRepository) {
+class FriendReadModelProjector(val repository: FriendReadModelRepository) {
     @EventHandler
     fun on(event: FriendAddedEvent) {
         repository.save<FriendReadModelEntity>(

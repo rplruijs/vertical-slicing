@@ -1,0 +1,16 @@
+<div th:fragment="selected-friend"
+     th:data-friend-id="${friend.friendId}"
+     class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50">
+    <div class="flex items-center">
+        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold"
+             th:text="${!#strings.isEmpty(friend.firstName) ? #strings.substring(friend.firstName, 0, 1) : ''} + ${!#strings.isEmpty(friend.lastName) ? #strings.substring(friend.lastName, 0, 1) : ''}">
+        </div>
+        <div class="ml-3">
+            <p class="font-medium text-gray-900" th:text="|${friend.firstName} ${friend.lastName}|"></p>
+        </div>
+    </div>
+    <button onclick="removeSelectedFriend(this.parentNode)"
+            class="text-gray-400 hover:text-red-600 transition ml-2">
+        <i class="fas fa-times"></i>
+    </button>
+</div>

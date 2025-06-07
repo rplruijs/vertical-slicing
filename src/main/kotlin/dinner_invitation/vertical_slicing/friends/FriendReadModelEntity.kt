@@ -5,8 +5,8 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 
-
 class AllFriendsQuery()
+data class GetFriendQuery(val friendId: String)
 
 
 @Entity
@@ -54,5 +54,5 @@ class FriendReadModelEntity {
 
 
 }
-
 data class FriendsReadModel(val data: List<FriendReadModelEntity>)
+

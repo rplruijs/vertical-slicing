@@ -6,20 +6,24 @@ import org.axonframework.queryhandling.QueryGateway
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 class RoutingController(val queryGateway: QueryGateway) {
 
     @GetMapping("/")
     fun landingPage(model: Model): String {
-        return "index"
+        return "dashboard/index"
+    }
+
+    @GetMapping("/mastering-htmx")
+    fun masteringHTMX(model: Model): String {
+        return "mastering-htmx"
     }
 
     @GetMapping("/plan-dinner")
     fun planDinnerPage(model: Model): String {
         val friendsReadModel = queryGateway.query(AllFriendsQuery(), FriendsReadModel::class.java ).get()
         model.addAttribute("friendsReadModel", friendsReadModel)
-        return "plan-dinner"
+        return "plandinner/plan-dinner"
     }
 }
